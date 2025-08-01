@@ -7,7 +7,8 @@ const FaceExpression = () => {
   const [mood, setMood] = React.useState("Detecting...");
 
   const loadModels = async () => {
-    const MODEL_URL = "/models";
+    const modelBase = import.meta.env.BASE_URL;
+    const MODEL_URL = `${modelBase}models/`;
     await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
     await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
   };
