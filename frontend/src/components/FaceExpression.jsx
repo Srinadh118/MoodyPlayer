@@ -5,6 +5,7 @@ import "./FaceExpression.css";
 const FaceExpression = () => {
   const videoRef = useRef(null);
   const [mood, setMood] = React.useState("Detecting...");
+  const [camAccess, setCamAccess] = React.useState(false);
 
   const loadModels = async () => {
     const modelBase = import.meta.env.BASE_URL;
@@ -16,9 +17,11 @@ const FaceExpression = () => {
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then((stream) => {
+        setCamAccess(true);
         videoRef.current.srcObject = stream;
       })
       .catch((err) => {
+        setMood("No Camera");
         console.log("Please enable camera access", err);
       });
   };
@@ -50,13 +53,19 @@ const FaceExpression = () => {
   }, []);
 
   return (
-    <div className="face-expression section">
+    <div className="face-expression section rubik-normal">
       <div className="face-video-container">
         <video ref={videoRef} autoPlay muted loop>
           Your browser does not support the video tag.
         </video>
+        <div className={camAccess ? "overlay" : "overlay show"}>
+          <span>CAMERA ACCESS REQUIRED</span>
+          <button className="btn grant-access-btn" onClick={startVideo}>
+            Grant Access
+          </button>
+        </div>
       </div>
-      <div className="details-container rubik-normal">
+      <div className="details-container">
         <div className="details">
           <h2>Live Mood Detection</h2>
           <p>
