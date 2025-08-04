@@ -8,3 +8,18 @@
   font-weight: 400;
   color: var(--clr-secondary);
 }
+
+.app footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--clr-fg);
+  padding-bottom: 2rem;
+}
+
+.app footer a {
+  color: var(--clr-secondary);
+  text-decoration: none;
+}
+.app footer a:hover {
+  text-decoration: underline;
+}

@@ -39,6 +39,7 @@
   border-radius: 0 0 0.6rem 0.6rem;
   cursor: pointer;
   touch-action: none;
+  user-select: none;
 }
 /* background-color: hsl(from var(--clr-fg) h s l / 0.1); */
 
@@ -58,6 +59,7 @@
   transition: background-color 0.1s ease-in-out;
   border-radius: 0 0.6rem 0.6rem 0.6rem;
   touch-action: none;
+  user-select: none;
 }
 
 .song-card .progress-bar::before {

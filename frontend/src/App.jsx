@@ -8,6 +8,15 @@ const App = () => {
       <h1 className="app-title rubik-80s-fade section">Moody Player</h1>
       <FaceExpression />
       <MoodSongs />
+      <footer className="section">
+        <p className="rubik-normal">
+          Made with ❤️ by
+          <a href="https://github.com/Srinadh118" target="blank">
+            {" "}
+            Srinadh
+          </a>
+        </p>
+      </footer>
     </div>
   );
 };
