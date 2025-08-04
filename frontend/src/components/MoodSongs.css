@@ -22,21 +22,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0 0.5rem 1rem;
   border-radius: 0.3rem;
 }
 .songs-container .song-card:hover {
   background-color: hsl(from var(--clr-fg) h s l / 0.05);
 }
 .song-card .progress-bar {
+  --timeline-preview: 0%;
   position: absolute;
   bottom: 0;
   left: 0;
   display: none;
   width: 100%;
-  height: 1rem;
+  height: 0.8rem;
   border-radius: 0 0 0.6rem 0.6rem;
   cursor: pointer;
+  touch-action: none;
 }
 /* background-color: hsl(from var(--clr-fg) h s l / 0.1); */
 
@@ -50,28 +52,43 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
-  height: 0.25rem;
+  height: 0.2rem;
   width: 0;
-  background-color: hsl(from var(--clr-fg) h s l / 0.7);
+  background-color: hsl(from var(--clr-fg) h s l / 0.6);
   transition: background-color 0.1s ease-in-out;
   border-radius: 0 0.6rem 0.6rem 0.6rem;
+  touch-action: none;
+}
+
+.song-card .progress-bar::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0.2rem;
+  width: var(--timeline-preview, 0%);
+  background-color: hsl(from var(--clr-fg) h s l / 0.1);
+  transition: background-color 0.1s ease-in-out;
+  border-radius: 0 0.6rem 0.6rem 0.6rem;
+  pointer-events: none;
+  touch-action: none;
 }
 
 .song-card .progress-bar .progress-dot {
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateX(-50%);
+  transform: translate(-50%, -10%);
   display: none;
-  width: 0.8rem;
-  height: 0.8rem;
+  width: 0.7rem;
+  height: 0.7rem;
   background-color: var(--clr-fg);
   border-radius: 50%;
   cursor: pointer;
+  touch-action: none;
 }
 .song-card:hover .progress-bar .progress {
-  background-color: hsl(from var(--clr-secondary) h s l / 0.7);
+  background-color: hsl(from var(--clr-secondary) h s l / 0.6);
 }
 .progress-bar:hover .progress-dot {
   display: block;
@@ -109,6 +126,8 @@
 }
 .song-card .song-controls .play-btn {
   display: flex;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
 
   > svg {
     stroke: none;
