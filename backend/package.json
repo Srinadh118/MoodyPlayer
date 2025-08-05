@@ -11,10 +11,12 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "imagekit": "^6.0.0",
     "mongoose": "^8.17.0",
-    "multer": "^2.0.2"
+    "multer": "^2.0.2",
+    "music-metadata": "^11.7.3"
   }
 }

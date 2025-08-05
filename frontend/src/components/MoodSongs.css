@@ -97,10 +97,19 @@
 }
 
 .song-card .song-details {
+  width: min(50%, 50vw);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   padding-block: 0.25rem;
+}
+
+.song-card .song-details h3,
+.song-card .song-details p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .song-card .song-details h3 {
@@ -116,9 +125,10 @@
 }
 
 .song-card .song-controls {
+  width: max(50%, 70vw);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: end;
   gap: 1rem;
 }
 .song-card .song-controls .duration .total-time {

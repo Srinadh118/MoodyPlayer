@@ -1,4 +1,5 @@
 var ImageKit = require("imagekit");
+var mongoose = require("mongoose");
 
 var imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -11,7 +12,7 @@ const uploadFile = (audio) => {
     imagekit.upload(
       {
         file: audio.buffer,
-        fileName: audio.title,
+        fileName: new mongoose.Types.ObjectId().toString(),
         folder: "moodsongs",
       },
       (error, result) => {

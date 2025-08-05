@@ -1,15 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import SongCard from "./SongCard";
 import "./MoodSongs.css";
-import { songsData } from "../data/songsData";
-const MoodSongs = () => {
+
+const MoodSongs = ({ songsData }) => {
   const audioRef = useRef(new Audio());
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSongComplete, setIsSongComplete] = useState(false);
   const [progressPercentage, setProgressPercentage] = useState(0);
+  const [currentTime, setCurrentTime] = useState("0:00");
 
   const isSeekingRef = useRef(false);
+  const formatDuration = (seconds) => {
+    if (isNaN(seconds)) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${mins}:${secs}`;
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -18,6 +27,7 @@ const MoodSongs = () => {
       if (isSeekingRef.current) return;
       if (audio.duration) {
         setProgressPercentage((audio.currentTime / audio.duration) * 100);
+        setCurrentTime(formatDuration(audio.currentTime));
       }
     };
 
@@ -25,6 +35,7 @@ const MoodSongs = () => {
       setIsPlaying(false);
       setIsSongComplete(true);
       setProgressPercentage(0);
+      setCurrentTime("0:00");
     };
 
     audio.addEventListener("timeupdate", handleTimeUpdate);
@@ -39,11 +50,12 @@ const MoodSongs = () => {
   const handlePlay = (song) => {
     const audio = audioRef.current;
     setIsSongComplete(false);
-    if (currentSong !== song.id) {
-      audio.src = song.src;
+    if (currentSong !== song._id) {
+      audio.src = song.audioUrl;
       audio.currentTime = 0;
       setProgressPercentage(0);
-      setCurrentSong(song.id);
+      setCurrentTime("0:00");
+      setCurrentSong(song._id);
     }
     audio
       .play()
@@ -54,13 +66,14 @@ const MoodSongs = () => {
         console.error("Error playing audio:", error);
       });
   };
+
   const handlePause = () => {
     audioRef.current.pause();
     setIsPlaying(false);
   };
 
   const togglePlayPause = (song) => {
-    if (currentSong === song.id) {
+    if (currentSong === song._id) {
       if (isPlaying) {
         handlePause();
       } else {
@@ -77,7 +90,7 @@ const MoodSongs = () => {
       <div className="songs-container">
         {songsData.map((song) => (
           <SongCard
-            key={song.id}
+            key={song._id}
             song={song}
             audioRef={audioRef}
             currentSong={currentSong}
@@ -85,6 +98,9 @@ const MoodSongs = () => {
             isSongComplete={isSongComplete}
             progressPercentage={progressPercentage}
             setProgressPercentage={setProgressPercentage}
+            currentTime={currentTime}
+            setCurrentTime={setCurrentTime}
+            formatDuration={formatDuration}
             togglePlayPause={togglePlayPause}
             setIsSeeking={(v) => (isSeekingRef.current = v)}
           />

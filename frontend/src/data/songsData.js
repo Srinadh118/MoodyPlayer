@@ -34,4 +34,11 @@ export const songsData = [
     src: "take-me-home-hills-x-hills.mp3",
     duration: "3:57",
   },
+  {
+    id: 6,
+    title: "Husn",
+    artist: "Anuv Jain",
+    src: "Husn - Anuv Jain.m4a",
+    duration: "3:59",
+  },
 ];

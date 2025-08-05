@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 const SongCard = (props) => {
   const {
@@ -9,13 +9,16 @@ const SongCard = (props) => {
     isSongComplete,
     progressPercentage,
     setProgressPercentage,
+    currentTime,
+    setCurrentTime,
+    formatDuration,
     togglePlayPause,
     setIsSeeking,
   } = props;
   const progressBarRef = useRef(null);
   const pendingSeekPctRef = useRef(0);
-  const playingThis = currentSong === song.id && isPlaying;
-  const pausedThis = currentSong === song.id && !isPlaying && !isSongComplete;
+  const playingThis = currentSong === song._id && isPlaying;
+  const pausedThis = currentSong === song._id && !isPlaying && !isSongComplete;
 
   // helper to clamp 0..100
   const clamp = (n, min = 0, max = 100) => Math.min(Math.max(n, min), max);
@@ -26,6 +29,9 @@ const SongCard = (props) => {
     if (currentSong == null) return;
     setTimelinePosition(e);
     setProgressPercentage(pendingSeekPctRef.current * 100);
+    setCurrentTime(
+      formatDuration(pendingSeekPctRef.current * audioRef.current.duration)
+    );
   };
   const handlePointerUp = () => {
     if (currentSong == null) return;
@@ -43,7 +49,7 @@ const SongCard = (props) => {
     window.removeEventListener("pointerup", handlePointerUp);
   };
   const handleProgressSeek = (e, song) => {
-    if (currentSong !== song.id) return;
+    if (currentSong !== song._id) return;
     e.preventDefault();
 
     // begin dragging
@@ -85,7 +91,7 @@ const SongCard = (props) => {
 
   return (
     <div
-      key={song.id}
+      key={song._id}
       className={`song-card ${playingThis ? "is-playing" : ""} ${
         pausedThis ? "is-paused" : ""
       }`}
@@ -96,7 +102,10 @@ const SongCard = (props) => {
       </div>
       <div className="song-controls">
         <div className="duration">
-          <span className="total-time">{song.duration}</span>
+          <span className="total-time">
+            {playingThis || pausedThis ? `${currentTime} / ` : ""}
+            {song.duration}
+          </span>
         </div>
         <button
           className="btn play-btn"
@@ -136,7 +145,6 @@ const SongCard = (props) => {
         onMouseMove={(e) => handleMouseMove(e)}
         onMouseLeave={handleMouseLeave}
         role="progressbar"
-        aria-valuenow={progressPercentage}
         aria-valuemin="0"
         aria-valuemax="100"
       >

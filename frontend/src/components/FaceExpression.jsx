@@ -1,11 +1,12 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import axios from "axios";
 import * as faceapi from "face-api.js";
 import "./FaceExpression.css";
 
-const FaceExpression = () => {
+const FaceExpression = ({ setSongsData }) => {
   const videoRef = useRef(null);
-  const [mood, setMood] = React.useState("Detecting...");
-  const [camAccess, setCamAccess] = React.useState(false);
+  const [mood, setMood] = useState("click detect");
+  const [camAccess, setCamAccess] = useState(false);
 
   const loadModels = async () => {
     const modelBase = import.meta.env.BASE_URL;
@@ -27,12 +28,12 @@ const FaceExpression = () => {
   };
   const handleVideoPlay = async () => {
     try {
+      setSongsData([]);
       const detections = await faceapi
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceExpressions();
       let mostProbableExpression = 0;
       let expression = "";
-
       for (const detection of Object.keys(detections[0].expressions)) {
         if (detections[0].expressions[detection] > mostProbableExpression) {
           mostProbableExpression = detections[0].expressions[detection];
@@ -40,6 +41,16 @@ const FaceExpression = () => {
         }
       }
       setMood(expression);
+
+      axios
+        .get(`http://localhost:3000/songs?mood=${expression}`)
+        .then((response) => {
+          setSongsData(response.data.songs);
+        })
+        .catch((error) => {
+          console.log(error);
+          setSongsData([]);
+        });
     } catch {
       setMood("No Face");
       return;
@@ -48,8 +59,6 @@ const FaceExpression = () => {
 
   useEffect(() => {
     loadModels().then(startVideo);
-    videoRef.current &&
-      videoRef.current.addEventListener("play", handleVideoPlay);
   }, []);
 
   return (
@@ -58,12 +67,14 @@ const FaceExpression = () => {
         <video ref={videoRef} autoPlay muted loop>
           Your browser does not support the video tag.
         </video>
-        <div className={camAccess ? "overlay" : "overlay show"}>
-          <span>CAMERA ACCESS REQUIRED</span>
-          <button className="btn grant-access-btn" onClick={startVideo}>
-            Grant Access
-          </button>
-        </div>
+        {!camAccess && (
+          <div className="overlay">
+            <span>CAMERA ACCESS REQUIRED</span>
+            <button className="btn grant-access-btn" onClick={startVideo}>
+              Grant Access
+            </button>
+          </div>
+        )}
       </div>
       <div className="details-container">
         <div className="details">
