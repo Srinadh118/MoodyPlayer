@@ -1,14 +1,17 @@
-name: Deploy Vite React (subfolder) to GitHub Pages
+name: MoodyPlayer Deployment
 
 on:
   push:
-    branches: [ main ]  # or your default branch
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy.yml"
+      - "frontend/**"
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # needed to push to gh-pages
+      contents: write # needed to push to gh-pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
