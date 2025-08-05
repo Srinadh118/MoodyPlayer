@@ -43,7 +43,7 @@ const FaceExpression = ({ setSongsData }) => {
       setMood(expression);
 
       axios
-        .get(`http://localhost:3000/songs?mood=${expression}`)
+        .get(`https://moodyplayer-n5xu.onrender.com/songs?mood=${expression}`)
         .then((response) => {
           setSongsData(response.data.songs);
         })
