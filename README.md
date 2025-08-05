@@ -4,9 +4,9 @@ Added:
 - Music player with user-friendly controls
 - ImageKit integration
 - Recommended Songs
+- backend deployment
 ---
 Working on:
-- backend deployment
 - add songs by user
 ---
 ## Live Link: https://Srinadh118.github.io/MoodyPlayer/
