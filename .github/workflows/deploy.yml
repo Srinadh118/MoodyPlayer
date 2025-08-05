@@ -3,7 +3,7 @@ name: MoodyPlayer Deployment
 on:
   push:
     paths:
-      - ".github/workflows/deploy.yml"
+      - "backend/**"
       - "frontend/**"
 
 jobs:
