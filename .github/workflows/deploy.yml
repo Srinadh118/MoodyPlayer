@@ -2,9 +2,7 @@ name: MoodyPlayer Deployment
 
 on:
   push:
-    paths:
-      - "backend/**"
-      - "frontend/**"
+    branches: [main]
 
 jobs:
   build-deploy:

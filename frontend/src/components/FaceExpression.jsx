@@ -23,7 +23,7 @@ const FaceExpression = ({ setSongsData }) => {
       })
       .catch((err) => {
         setMood("No Camera");
-        console.log("Please enable camera access", err);
+        console.log("Please enable camera access in site-settings", err);
       });
   };
   const handleVideoPlay = async () => {
