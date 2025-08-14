@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import SongCard from "./SongCard";
 import "./MoodSongs.css";
 
-const MoodSongs = ({ songsData }) => {
+const MoodSongs = ({ songsData, isPlaying, setIsPlaying }) => {
   const audioRef = useRef(new Audio());
   const [currentSong, setCurrentSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [isSongComplete, setIsSongComplete] = useState(false);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [currentTime, setCurrentTime] = useState("0:00");
@@ -22,7 +21,6 @@ const MoodSongs = ({ songsData }) => {
 
   useEffect(() => {
     const audio = audioRef.current;
-
     const handleTimeUpdate = () => {
       if (isSeekingRef.current) return;
       if (audio.duration) {

@@ -2,17 +2,22 @@ import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import * as faceapi from "face-api.js";
 import "./FaceExpression.css";
+import { ChevronsRight } from "lucide-react";
 
-const FaceExpression = ({ setSongsData }) => {
+const FaceExpression = ({ setSongsData, setIsPlaying }) => {
   const videoRef = useRef(null);
-  const [mood, setMood] = useState("click detect");
+  const [mood, setMood] = useState("");
   const [camAccess, setCamAccess] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [detecting, setDetecting] = useState(false);
+  const [btnContent, setBtnContent] = useState("Detect Mood");
 
   const loadModels = async () => {
     const modelBase = import.meta.env.BASE_URL;
     const MODEL_URL = `${modelBase}models/`;
     await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
     await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+    setModelsLoaded(true);
   };
   const startVideo = () => {
     navigator.mediaDevices
@@ -27,34 +32,49 @@ const FaceExpression = ({ setSongsData }) => {
       });
   };
   const handleVideoPlay = async () => {
-    try {
-      setSongsData([]);
-      const detections = await faceapi
-        .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
-        .withFaceExpressions();
-      let mostProbableExpression = 0;
-      let expression = "";
-      for (const detection of Object.keys(detections[0].expressions)) {
-        if (detections[0].expressions[detection] > mostProbableExpression) {
-          mostProbableExpression = detections[0].expressions[detection];
-          expression = detection;
+    setDetecting(true);
+    setBtnContent("Detecting...");
+    setTimeout(async () => {
+      try {
+        const detections = await faceapi
+          .detectAllFaces(
+            videoRef.current,
+            new faceapi.TinyFaceDetectorOptions()
+          )
+          .withFaceExpressions();
+        let mostProbableExpression = 0;
+        let expression = "";
+        for (const detection of Object.keys(detections[0].expressions)) {
+          if (detections[0].expressions[detection] > mostProbableExpression) {
+            mostProbableExpression = detections[0].expressions[detection];
+            expression = detection;
+          }
         }
-      }
-      setMood(expression);
+        setMood(expression);
 
-      axios
-        .get(`https://moodyplayer-n5xu.onrender.com/songs?mood=${expression}`)
-        .then((response) => {
+        try {
+          const isProd =
+            import.meta.env.VITE_NODE_ENV === "production" ? true : false;
+          const response = await axios.get(
+            `${
+              isProd
+                ? import.meta.env.VITE_BACKEND_URL
+                : "http://localhost:3000"
+            }/songs?mood=${expression}`
+          );
           setSongsData(response.data.songs);
-        })
-        .catch((error) => {
-          console.log(error);
+        } catch (error) {
           setSongsData([]);
-        });
-    } catch {
-      setMood("No Face");
-      return;
-    }
+          setIsPlaying(false);
+        }
+      } catch {
+        setMood("No Face");
+        return;
+      } finally {
+        setDetecting(false);
+        setBtnContent("Detect Mood");
+      }
+    }, 0);
   };
 
   useEffect(() => {
@@ -85,10 +105,23 @@ const FaceExpression = ({ setSongsData }) => {
           </p>
         </div>
         <div className="detect-button-container">
-          <button className="btn detect-btn" onClick={handleVideoPlay}>
-            Detect Mood
+          <button
+            className="btn detect-btn"
+            onClick={handleVideoPlay}
+            disabled={!modelsLoaded || detecting}
+          >
+            {btnContent}
           </button>
-          <span>Mood: {mood}</span>
+          <span>
+            Mood:{" "}
+            {mood === "" ? (
+              <>
+                click <ChevronsRight />
+              </>
+            ) : (
+              mood
+            )}
+          </span>
         </div>
       </div>
     </div>
