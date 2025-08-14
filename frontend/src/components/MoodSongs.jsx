@@ -83,8 +83,8 @@ const MoodSongs = ({ songsData, isPlaying, setIsPlaying }) => {
   };
 
   return (
-    <div className="mood-songs section rubik-normal">
-      <h2>Recommended Songs</h2>
+    <div className="mood-songs rubik-normal">
+      <h2>{!songsData.length ? "No Songs Yet." : "Recommended Songs"}</h2>
       <div className="songs-container">
         {songsData.map((song) => (
           <SongCard

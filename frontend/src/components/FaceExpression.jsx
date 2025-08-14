@@ -116,7 +116,8 @@ const FaceExpression = ({ setSongsData, setIsPlaying }) => {
             Mood:{" "}
             {mood === "" ? (
               <>
-                click <ChevronsRight />
+                Click <ChevronsRight className="click-arrow" />
+                <ChevronsRight className="click-arrow-shadow" />
               </>
             ) : (
               mood

@@ -9,7 +9,12 @@ const App = () => {
 
   return (
     <div className="app container">
-      <h1 className="app-title rubik-80s-fade section">Moody Player</h1>
+      <nav>
+        <div className="nav-container">
+          <h1 className="app-title rubik-80s-fade section">Moody Player</h1>
+          <div></div>
+        </div>
+      </nav>
       <FaceExpression setSongsData={setSongsData} setIsPlaying={setIsPlaying} />
       <MoodSongs
         songsData={songsData}

@@ -28,6 +28,7 @@ body,
   width: 100%;
   background-color: var(--clr-bg);
   color: var(--clr-fg);
+  overflow: hidden;
 }
 
 body::-webkit-scrollbar {
